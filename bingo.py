@@ -1,40 +1,77 @@
 import argparse
 import random
 import os
+import yaml
+
 from pathlib import Path
 from PyPDF2 import PdfMerger
 
 # Define paths
 TEMPLATE_FILE = "bingosheet.tex"
 RENDERS_DIR = Path("renders")
-BINGO_SQUARES_FILE = "bingo_squares.txt"
+BINGO_DATA_FILE = "bingo_data.yaml"
 
 # Ensure renders directory exists
 RENDERS_DIR.mkdir(exist_ok=True)
 
 
 def load_squares():
-    """Load bingo square suggestions from a text file."""
-    with open(BINGO_SQUARES_FILE, "r", encoding="utf-8") as f:
-        return [line.strip() for line in f if line.strip()]
+    """Load bingo square suggestions from a YAML file."""
+    with open(BINGO_DATA_FILE, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
 
-def generate_bingo_card(template: str, squares: list[str]) -> str:
-    """Replace the AUTOPOP ANCHOR in the template with randomized squares."""
-    random.shuffle(squares)
-    selected_squares = squares[:25]
-    selected_squares[12] = ""  # Center free space
+def generate_bingo_card(template: str, bingo_data: dict) -> str:
+    """Replace the AUTOPOP ANCHOR in the template with randomized, generated replacements."""
+    normal_squares = bingo_data.get("NORMAL", [])
+    special_squares = {
+        "FREE": bingo_data.get("FREE", []),
+        "MENTOR": bingo_data.get("MENTOR", []),
+        "ALUMNI": bingo_data.get("ALUMNI", []),
+        "PLUMB": bingo_data.get("PLUMB", []),
+        "CAPTAIN": bingo_data.get("CAPTAIN", []),
+    }
 
-    # Generate LaTeX nodes for each square
-    nodes = []
-    for i, square in enumerate(selected_squares):
-        row, col = divmod(i, 5)
-        nodes.append(
-            f"\\node[thick, text width=3.1cm, align=center] at ({col}, -{row}) {{{square}}};"
+    random.shuffle(normal_squares)
+
+    # Special cell placements
+    special_positions = {
+        (2, 2): ("darkgrey", "FREE SPACE", "AUTOPOP FREE"),
+        (2, 0): ("maroon", "MENTOR SPACE", "AUTOPOP MENTOR"),
+        (4, 2): ("lightgrey", "ALUMNI SPACE", "AUTOPOP ALUMNI"),
+        (2, 4): ("purple", "PLUMB SPACE", "AUTOPOP PLUMB"),
+        (0, 2): ("gold", "CAPTAIN SPACE", "AUTOPOP CAPTAIN"),
+    }
+
+    # Generate LaTeX nodes for special squares
+    special_nodes = []
+    for (col, row), (color, title, placeholder) in special_positions.items():
+        subtitle = (
+            random.choice(special_squares[title.split()[0]])
+            if special_squares[title.split()[0]]
+            else ""
+        )
+        special_nodes.append(
+            f"\\specialcell{{{col}}}{{{row}}}{{{color}}}{{{title}}}{{{subtitle}}};"
         )
 
-    # Replace the AUTOPOP ANCHOR with generated nodes
-    populated_template = template.replace("% {AUTOPOP ANCHOR}", "\n".join(nodes))
+    # Generate LaTeX nodes for normal squares
+    normal_index = 0
+    normal_nodes = []
+    for row in range(5):
+        for col in range(5):
+            if (row, col) not in special_positions:
+                square_text = normal_squares[normal_index]
+                normal_index += 1
+                normal_nodes.append(
+                    f"\\node[thick, text width=3cm, align=center] at ({col}, -{row}) {{{square_text}}};"
+                )
+
+    # Replace AUTOPOP ANCHOR with both normal and special nodes
+    populated_template = template.replace(
+        "% {AUTOPOP ANCHOR}", "\n".join(special_nodes + normal_nodes)
+    )
+
     return populated_template
 
 
@@ -58,9 +95,10 @@ def main(n: int, stitch: bool):
     with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
         template = f.read()
 
-    squares = load_squares()
+    bingo_data = load_squares()
+
     for i in range(n):
-        bingo_tex = generate_bingo_card(template, squares)
+        bingo_tex = generate_bingo_card(template, bingo_data)
         output_path = RENDERS_DIR / f"bingo_{i+1}.tex"
         pdf_output_path = RENDERS_DIR / f"bingo_{i+1}.pdf"
 

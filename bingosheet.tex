@@ -9,7 +9,10 @@
 
 % Custom colors for tidal force
 \definecolor{darkgrey}{RGB}{64,64,64}
+\definecolor{lightgrey}{RGB}{200,200,200}
 \definecolor{maroon}{RGB}{128,0,0}
+\definecolor{purple}{RGB}{102,0,153}
+\definecolor{gold}{RGB}{255,215,0}
 
 % Title styling
 \newcommand{\teamtitle}{
@@ -32,6 +35,14 @@
     \node[draw, thick, minimum size=3cm, align=center] {#1};
 }
 
+% Matthew's special cells
+\newcommand{\specialcell}[5]{
+    \draw[fill=#3, draw=none] (#1-0.5, -#2+0.5) rectangle (#1+0.5, -#2-0.5); % Background box
+    \node[text=white, text width=2.9cm, align=center, font=\bfseries] at (#1, -#2+0.3) {#4}; % Title at the top
+    \node[text=white, text width=3.1cm, align=center, font=\small] at (#1, -#2-0.2) {#5}; % Subtitle towards the middle-bottom
+}
+
+
 \begin{document}
 
 \teamtitle
@@ -46,15 +57,14 @@
     }
 
     % Static cells
-    % Center free space cell light grey background
-    \node[fill=maroon, text=white, text width=2.7cm,font=\bfseries, align=center] at (2, -2) {FREE SPACE};
-
-    % 0,2 cell "mentor space" maroon background
-    % 4,2 Alumni space, white background
+%     \specialcell{2}{2}{darkgrey}{FREE SPACE}{AUTOPOP FREE};
+%     \specialcell{2}{0}{maroon}{MENTOR SPACE}{AUTOPOP MENTOR};
+%     \specialcell{4}{2}{lightgrey}{ALUMNI SPACE}{AUTOPOP ALUMNI};
+%     \specialcell{2}{4}{gold}{PLUMB SPACE}{AUTOPOP PLUMB};
+%     \specialcell{0}{2}{purple}{CAPTAIN SPACE}{AUTOPOP CAPTAIN};
 
 
     % \node[thick, text width=3.5cm, align=center] at (1, -1) {Team Stands Around the Broken Robot};
-
     % {AUTOPOP ANCHOR}
 
 \end{tikzpicture}
