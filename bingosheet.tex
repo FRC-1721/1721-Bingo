@@ -14,6 +14,9 @@
 \definecolor{purple}{RGB}{102,0,153}
 \definecolor{gold}{RGB}{255,215,0}
 
+% No page nums
+\pagenumbering{gobble}
+
 % Title styling
 \newcommand{\teamtitle}{
     \centering
@@ -46,7 +49,6 @@
 \begin{document}
 
 \teamtitle
-
 \begin{center}
 \begin{tikzpicture}[x=3cm, y=3cm]
     % Draw grid
@@ -66,16 +68,21 @@
 
     % \node[thick, text width=3.5cm, align=center] at (1, -1) {Team Stands Around the Broken Robot};
     % {AUTOPOP ANCHOR}
-
 \end{tikzpicture}
 
 \textbf{Rules:} \\
+\small{
 \begin{enumerate}
  \item You must be present and witness the square you mark!
  \item No purposefully causing a square!
  \item Have fun!
 \end{enumerate}
+}
 
 \end{center}
+
+\vspace{-1.5em}
+\raggedleft
+\small META
 
 \end{document}

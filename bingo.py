@@ -21,7 +21,9 @@ def load_squares():
         return yaml.safe_load(f)
 
 
-def generate_bingo_card(template: str, bingo_data: dict) -> str:
+def generate_bingo_card(
+    template: str, bingo_data: dict, sheet_number: int, total_sheets: int
+) -> str:
     """Replace the AUTOPOP ANCHOR in the template with randomized, generated replacements."""
     normal_squares = bingo_data.get("NORMAL", [])
     special_squares = {
@@ -64,12 +66,17 @@ def generate_bingo_card(template: str, bingo_data: dict) -> str:
                 square_text = normal_squares[normal_index]
                 normal_index += 1
                 normal_nodes.append(
-                    f"\\node[thick, text width=3cm, align=center] at ({col}, -{row}) {{{square_text}}};"
+                    f"\\node[thick, text width=2.9cm, align=center] at ({col}, -{row}) {{{square_text}}};"
                 )
 
     # Replace AUTOPOP ANCHOR with both normal and special nodes
     populated_template = template.replace(
         "% {AUTOPOP ANCHOR}", "\n".join(special_nodes + normal_nodes)
+    )
+
+    # Some emtadata
+    populated_template = populated_template.replace(
+        "META", f"{sheet_number} of {total_sheets}"
     )
 
     return populated_template
@@ -98,7 +105,7 @@ def main(n: int, stitch: bool):
     bingo_data = load_squares()
 
     for i in range(n):
-        bingo_tex = generate_bingo_card(template, bingo_data)
+        bingo_tex = generate_bingo_card(template, bingo_data, i + 1, n)
         output_path = RENDERS_DIR / f"bingo_{i+1}.tex"
         pdf_output_path = RENDERS_DIR / f"bingo_{i+1}.pdf"
 
