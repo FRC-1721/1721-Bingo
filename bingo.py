@@ -2,6 +2,7 @@ import argparse
 import random
 import os
 from pathlib import Path
+from PyPDF2 import PdfMerger
 
 # Define paths
 TEMPLATE_FILE = "bingosheet.tex"
@@ -37,7 +38,22 @@ def generate_bingo_card(template: str, squares: list[str]) -> str:
     return populated_template
 
 
-def main(n: int):
+def stitch_pdfs():
+    """Stitch all generated PDFs into a single document."""
+    pdfs = sorted(RENDERS_DIR.glob("*.pdf"))
+    merger = PdfMerger()
+
+    for pdf in pdfs:
+        merger.append(str(pdf))
+
+    stitched_output = "stitched_bingo.pdf"
+    merger.write(stitched_output)
+    merger.close()
+
+    print(f"All PDFs stitched into {stitched_output}")
+
+
+def main(n: int, stitch: bool):
     """Generate n bingo sheets."""
     with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
         template = f.read()
@@ -57,11 +73,17 @@ def main(n: int):
 
         print(f"Generated {pdf_output_path}")
 
+    if stitch:
+        stitch_pdfs()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate random bingo sheets.")
     parser.add_argument(
         "-n", type=int, default=1, help="Number of bingo sheets to generate"
     )
+    parser.add_argument(
+        "-s", action="store_true", help="Stitch all PDFs into one document"
+    )
     args = parser.parse_args()
-    main(args.n)
+    main(args.n, args.s)
