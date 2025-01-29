@@ -1,56 +1,67 @@
+import argparse
 import random
+import os
+from pathlib import Path
 
-spaces = [
-    "Team quietly stands around the broken robot",
-    "Drive laptop unplugged",
-    "Funny meme on whiteboard",
-    "Fire extinguisher on hand",
-    "Jason says something on discord is innapropriate",
-    "Oil on the floor",
-    "Accident Counter less than 10",
-    "Ramen left out on table",
-    "Media pretending to be busy",
-    "No quarter inch drill bits",
-    "None of the batteries are charged",
-    "Metal shavings all over the lathe",
-    "Jukebox left on",
-    "DOOR!!",
-    "Fridge empty",
-    "Air compressser turning on randomly",
-    "3D printer spaghetti",
-    "Code kids singing",
-    "Couch cover is filthy",
-    "CNC machine leaking",
-    "Coffee stain on drawings",
-    "Coffee pot full",
-    "Doors are locked",
-    "Being behind schedule",
-]
+# Define paths
+TEMPLATE_FILE = "bingosheet.tex"
+RENDERS_DIR = Path("renders")
+BINGO_SQUARES_FILE = "bingo_squares.txt"
 
-bingoCard = [
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-]
+# Ensure renders directory exists
+RENDERS_DIR.mkdir(exist_ok=True)
 
-trigger = False
-random.shuffle(spaces)
 
-for i in range(5):
-    for l in range(5):
-        if i == 2 and l == 2:
-            bingoCard[2][2] += "Free space"
-        else:
-            bingoCard[i][l] += spaces[0]
-            spaces.pop(0)
-        if spaces == []:
-            break
-    if spaces == []:
-        break
+def load_squares():
+    """Load bingo square suggestions from a text file."""
+    with open(BINGO_SQUARES_FILE, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip()]
 
-print("Board:")
 
-for i in range(5):
-    print(bingoCard[i])
+def generate_bingo_card(template: str, squares: list[str]) -> str:
+    """Replace the AUTOPOP ANCHOR in the template with randomized squares."""
+    random.shuffle(squares)
+    selected_squares = squares[:25]
+    selected_squares[12] = ""  # Center free space
+
+    # Generate LaTeX nodes for each square
+    nodes = []
+    for i, square in enumerate(selected_squares):
+        row, col = divmod(i, 5)
+        nodes.append(
+            f"\\node[thick, text width=3.1cm, align=center] at ({col}, -{row}) {{{square}}};"
+        )
+
+    # Replace the AUTOPOP ANCHOR with generated nodes
+    populated_template = template.replace("% {AUTOPOP ANCHOR}", "\n".join(nodes))
+    return populated_template
+
+
+def main(n: int):
+    """Generate n bingo sheets."""
+    with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
+        template = f.read()
+
+    squares = load_squares()
+    for i in range(n):
+        bingo_tex = generate_bingo_card(template, squares)
+        output_path = RENDERS_DIR / f"bingo_{i+1}.tex"
+        pdf_output_path = RENDERS_DIR / f"bingo_{i+1}.pdf"
+
+        # Save LaTeX file
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(bingo_tex)
+
+        # Compile to PDF
+        os.system(f"pdflatex -output-directory={RENDERS_DIR} {output_path}")
+
+        print(f"Generated {pdf_output_path}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate random bingo sheets.")
+    parser.add_argument(
+        "-n", type=int, default=1, help="Number of bingo sheets to generate"
+    )
+    args = parser.parse_args()
+    main(args.n)
