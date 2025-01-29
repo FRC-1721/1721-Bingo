@@ -4,7 +4,7 @@ import os
 import yaml
 
 from pathlib import Path
-from PyPDF2 import PdfMerger
+from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 
 # Define paths
 TEMPLATE_FILE = "bingosheet.tex"
@@ -82,19 +82,39 @@ def generate_bingo_card(
     return populated_template
 
 
-def stitch_pdfs():
-    """Stitch all generated PDFs into a single document."""
+def stitch_pdfs(chunk_size=16):
+    """Stitch all generated PDFs into separate chunks of chunk_size pages each."""
     pdfs = sorted(RENDERS_DIR.glob("*.pdf"))
     merger = PdfMerger()
 
+    # Merge all PDFs into one
     for pdf in pdfs:
         merger.append(str(pdf))
 
-    stitched_output = "stitched_bingo.pdf"
-    merger.write(stitched_output)
+    full_pdf_path = RENDERS_DIR / "full_bingo.pdf"
+    merger.write(full_pdf_path)
     merger.close()
 
-    print(f"All PDFs stitched into {stitched_output}")
+    # Split the full PDF into chunks
+    reader = PdfReader(full_pdf_path)
+    total_pages = len(reader.pages)
+    num_chunks = (total_pages + chunk_size - 1) // chunk_size  # Round up
+
+    for i in range(num_chunks):
+        writer = PdfWriter()
+        start_page = i * chunk_size
+        end_page = min(start_page + chunk_size, total_pages)
+
+        for j in range(start_page, end_page):
+            writer.add_page(reader.pages[j])
+
+        chunk_filename = f"bingo_chunk_{i+1}.pdf"
+        with open(chunk_filename, "wb") as output_pdf:
+            writer.write(output_pdf)
+
+        print(f"Created {chunk_filename}")
+
+    print("PDF splitting complete!")
 
 
 def main(n: int, stitch: bool):
