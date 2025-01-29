@@ -1,5 +1,7 @@
 # 1721-Bingo
 
+![image](https://github.com/user-attachments/assets/e22b2cce-e806-4abf-95a2-0282685c56df)
+
 ```shell
 $ bingo.py
 usage: bingo.py [-h] [-n N] [-s]
@@ -16,4 +18,4 @@ Usage is simple! You must have `pdflatex` installed to generate.
 
 `python bingo.py -n <number of sheets> -s`
 
-Sheets are generated randomly, edit bingo_squares.txt when you want more/less.
+Sheets are generated randomly, edit `bingo_data.yaml` when you want more/less.
