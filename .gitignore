@@ -5,3 +5,6 @@ renders/
 *.aux
 *.log
 *.pdf
+
+# Dev
+*.*~

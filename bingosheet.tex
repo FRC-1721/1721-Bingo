@@ -4,27 +4,24 @@
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{tikz}
 \usepackage{geometry}
+\usepackage{graphicx} % Added for image support
 \geometry{margin=1in}
 
-% Custom colors for your team
+% Custom colors for tidal force
 \definecolor{darkgrey}{RGB}{64,64,64}
 \definecolor{maroon}{RGB}{128,0,0}
 
 % Title styling
 \newcommand{\teamtitle}{
     \centering
-    \vspace{1em}
     \begin{tikzpicture}
-        \node[draw=none, fill=maroon, text width=\textwidth, minimum height=2cm, align=center] {
-            \textcolor{white}{\Huge \bfseries FRC-1721 Bingo}\\[0.5em]
-            \textcolor{white}{\large \the\year{}}
-        };
+        % Header Image
+        \node[draw=none, anchor=north west] at (0, 0) {\includegraphics[width=\textwidth]{resources/Header.png}};
 
-        % Name
-        \node[draw, fill=white, text width=\textwidth, minimum height=.6cm, align=left] at (0, -1.3) {
-            \textcolor{black}{Name: }
-        };
+        % Year in top right
+        \node[draw=none, text=maroon, font=\large\bfseries] at (16, -1.8) {\the\year};
     \end{tikzpicture}
+    \vspace{1em}
 }
 
 % Bingo grid dimensions
@@ -48,19 +45,24 @@
         }
     }
 
-    % Cells
+    % Static cells
+    % Center free space cell light grey background
     \node[fill=maroon, text=white, text width=2.7cm,font=\bfseries, align=center] at (2, -2) {FREE SPACE};
+
+    % 0,2 cell "mentor space" maroon background
+    % 4,2 Alumni space, white background
+
+
     % \node[thick, text width=3.5cm, align=center] at (1, -1) {Team Stands Around the Broken Robot};
 
     % {AUTOPOP ANCHOR}
-
 
 \end{tikzpicture}
 
 \textbf{Rules:} \\
 \begin{enumerate}
  \item You must be present and witness the square you mark!
- \item No pourposefully causing a square!
+ \item No purposefully causing a square!
  \item Have fun!
 \end{enumerate}
 
