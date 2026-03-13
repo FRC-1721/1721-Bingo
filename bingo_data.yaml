@@ -1,12 +1,10 @@
 NORMAL:
   - Box of snacks gone instantly
-  - Still finding Jewett pictures
   - Code threatens humanity
   - Kitchen cart left outside
   - Hole in the wall
   - Accident Counter Reset
   - Clean workbenches
-  - Do the math!
   - Going to Irving
   - Vivvefest mentioned
   - Magic Smoke
@@ -15,7 +13,6 @@ NORMAL:
   - Staying past midnight
   - Sports Team Outside
   - “Is this like battlebots?“
-  - “We're double queued!“
   - Too many people in the pits
   - Nobody in the pits
   - “Did we order X?“
@@ -27,42 +24,41 @@ NORMAL:
   - CANbus hell
   - Robotics on a snow-day
   - Hold a battery by the wires
-  - Our auto works!
   - A robot is upside down on the field
   - Code complains about REV
   - Chief Delphi
   - “Go fetch the multimeter“
+  - Fieldtrip to Mike's Shop
 
 SEASONAL:
-  - Popped Algae
-  - Fieldtrip to Mike's Shop
-  - Mike quietly disappointed after you break a toolbit
-  - Joe fails EE-201 with Professor Monk
+  - Robot goes upside down
   - “Noise!“
 
 MENTOR:
-  - Mentor uses brian rot
   - No number bigger than 9
   - Mark's presence fixes it
+  - Do the math!
+  - Mentor falls asleep
 
 ALUMNI:
   - Convince an alumni to build part of the robot for you
-  - “When I was on the team...“
+  - “Back in my day...“
   - Who are you again?
 
-PLUMB:
-  - A plumb uses brian rot
+ROOKIE:
+  - "67"
   - Find the aluminum magnets
   - Venture to the closet
-  - When's kickoff?
+  - Playing with expensive thing
 
 CAPTAIN:
-  - Unexplained bruins stickers
-  - Captain takes FOREVER with announcements
+  - Well actually its really simple
+  - Amazing speech
 
 FREE:
-  - As long as code doesn't work
-  - For battlebots fans
+  - while code compiles
+  - for battlebots fans
   - During Build Season
   - 8'x8' is the best we can do
-  - Just like donated machine time
+  - Just like donated time
+  - As in freedom!

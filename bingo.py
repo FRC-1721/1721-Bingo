@@ -30,7 +30,7 @@ def generate_bingo_card(
         "FREE": bingo_data.get("FREE", []),
         "MENTOR": bingo_data.get("MENTOR", []),
         "ALUMNI": bingo_data.get("ALUMNI", []),
-        "PLUMB": bingo_data.get("PLUMB", []),
+        "ROOKIE": bingo_data.get("ROOKIE", []),
         "CAPTAIN": bingo_data.get("CAPTAIN", []),
     }
 
@@ -41,7 +41,7 @@ def generate_bingo_card(
         (2, 2): ("darkgrey", "FREE SPACE", "AUTOPOP FREE"),
         (2, 0): ("maroon", "MENTOR SPACE", "AUTOPOP MENTOR"),
         (4, 2): ("lightgrey", "ALUMNI SPACE", "AUTOPOP ALUMNI"),
-        (2, 4): ("purple", "PLUMB SPACE", "AUTOPOP PLUMB"),
+        (2, 4): ("purple", "ROOKIE SPACE", "AUTOPOP ROOKIE"),
         (0, 2): ("gold", "CAPTAIN SPACE", "AUTOPOP CAPTAIN"),
     }
 
